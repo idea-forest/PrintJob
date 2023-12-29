@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8CED90B7-6372-486F-A5B9-91D765F47965}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>PrintLoc</RootNamespace>
+    <AssemblyName>PrintLoc</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Command\RelayCommand.cs" />
+    <Compile Include="Helper\AccountManager.cs" />
+    <Compile Include="Helper\ApiBaseUrl.cs" />
+    <Compile Include="Helper\ClientStatus.cs" />
+    <Compile Include="Helper\CredentialLockerHelper.cs" />
+    <Compile Include="Helper\DeviceInformation.cs" />
+    <Compile Include="Helper\InternetConnectivityMonitor.cs" />
+    <Compile Include="Helper\PrinterMonitor.cs" />
+    <Compile Include="Helper\Qrcode.cs" />
+    <Compile Include="Helper\WindowManager.cs" />
+    <Compile Include="Model\AuthResult.cs" />
+    <Compile Include="Model\ConnectedDevice.cs" />
+    <Compile Include="Model\Device.cs" />
+    <Compile Include="Model\Printer.cs" />
+    <Compile Include="Model\PrintJob.cs" />
+    <Compile Include="Model\Status.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserModel.cs" />
+    <Compile Include="Validator\Interfaces\IPersonalAccountValidator.cs" />
+    <Compile Include="Validator\PersonalAccountValidator.cs" />
+    <Compile Include="ViewModel\BaseClass\EmailNotification.cs" />
+    <Compile Include="ViewModel\HomepageViewModel.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\PrinterListViewModel.cs" />
+    <Compile Include="ViewModel\PrintJobViewModel.cs" />
+    <Compile Include="View\HomepageControl.xaml.cs">
+      <DependentUpon>HomepageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LoginControl.xaml.cs">
+      <DependentUpon>LoginControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\PrinterList.xaml.cs">
+      <DependentUpon>PrinterList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PrinterListView.xaml.cs">
+      <DependentUpon>PrinterListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PrintJob.xaml.cs">
+      <DependentUpon>PrintJob.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PrintJobView.xaml.cs">
+      <DependentUpon>PrintJobView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Report.xaml.cs">
+      <DependentUpon>Report.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Reports.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Reports.Designer.cs">
+      <DependentUpon>Reports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\SidebarContent.xaml.cs">
+      <DependentUpon>SidebarContent.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
+  </Target>
+  <ItemGroup>
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Azure.Core.1.36.0\lib\net472\Azure.Core.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\CommonServiceLocator.2.0.2\lib\net45\CommonServiceLocator.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\CredentialManagement.1.0.2\lib\net35\CredentialManagement.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNet.SignalR.Client.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Client.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNetCore.Connections.Abstractions.8.0.0\lib\net462\Microsoft.AspNetCore.Connections.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNetCore.Http.Connections.Client.8.0.0\lib\net462\Microsoft.AspNetCore.Http.Connections.Client.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNetCore.Http.Connections.Common.8.0.0\lib\net462\Microsoft.AspNetCore.Http.Connections.Common.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNetCore.SignalR.Client.Core.8.0.0\lib\net462\Microsoft.AspNetCore.SignalR.Client.Core.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNetCore.SignalR.Client.8.0.0\lib\net462\Microsoft.AspNetCore.SignalR.Client.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNetCore.SignalR.Common.8.0.0\lib\net462\Microsoft.AspNetCore.SignalR.Common.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNetCore.SignalR.Protocols.Json.8.0.0\lib\net462\Microsoft.AspNetCore.SignalR.Protocols.Json.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Bcl.TimeProvider.8.0.0\lib\net462\Microsoft.Bcl.TimeProvider.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Microsoft.CSharp.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Data.Sqlite.Core.8.0.0\lib\netstandard2.0\Microsoft.Data.Sqlite.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Extensions.DependencyInjection.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Extensions.DependencyInjection.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Extensions.Features.8.0.0\lib\net462\Microsoft.Extensions.Features.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Extensions.Logging.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Extensions.Logging.8.0.0\lib\net462\Microsoft.Extensions.Logging.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Extensions.Options.8.0.0\lib\net462\Microsoft.Extensions.Options.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Extensions.Primitives.8.0.0\lib\net462\Microsoft.Extensions.Primitives.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Graph.Core.3.1.3\lib\net462\Microsoft.Graph.Core.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Graph.5.37.0\lib\netstandard2.0\Microsoft.Graph.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.IdentityModel.Abstractions.7.0.3\lib\net472\Microsoft.IdentityModel.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.IdentityModel.JsonWebTokens.7.0.3\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.IdentityModel.Logging.7.0.3\lib\net472\Microsoft.IdentityModel.Logging.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.IdentityModel.Protocols.7.0.3\lib\net472\Microsoft.IdentityModel.Protocols.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.IdentityModel.Protocols.OpenIdConnect.7.0.3\lib\net472\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.IdentityModel.Tokens.7.0.3\lib\net472\Microsoft.IdentityModel.Tokens.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Kiota.Abstractions.1.7.2\lib\netstandard2.0\Microsoft.Kiota.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Kiota.Authentication.Azure.1.1.2\lib\netstandard2.0\Microsoft.Kiota.Authentication.Azure.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Kiota.Http.HttpClientLibrary.1.3.3\lib\netstandard2.0\Microsoft.Kiota.Http.HttpClientLibrary.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Kiota.Serialization.Form.1.1.1\lib\netstandard2.0\Microsoft.Kiota.Serialization.Form.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Kiota.Serialization.Json.1.1.2\lib\netstandard2.0\Microsoft.Kiota.Serialization.Json.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Kiota.Serialization.Multipart.1.1.1\lib\netstandard2.0\Microsoft.Kiota.Serialization.Multipart.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.Kiota.Serialization.Text.1.1.1\lib\netstandard2.0\Microsoft.Kiota.Serialization.Text.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\mscorlib.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Std.UriTemplate.0.0.46\lib\netstandard2.0\Std.UriTemplate.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.CodeDom.8.0.0\lib\net462\System.CodeDom.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.ComponentModel.Composition.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.ComponentModel.DataAnnotations.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Data.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Deployment.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Diagnostics.DiagnosticSource.8.0.0\lib\net462\System.Diagnostics.DiagnosticSource.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Drawing.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.IdentityModel.Tokens.Jwt.7.0.3\lib\net472\System.IdentityModel.Tokens.Jwt.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.IO.Pipelines.8.0.0\lib\net462\System.IO.Pipelines.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Management.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Memory.Data.1.0.2\lib\net461\System.Memory.Data.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.WebRequest.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Net.Http.WinHttpHandler.6.0.0\lib\net461\System.Net.Http.WinHttpHandler.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Sockets.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Numerics.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Claims.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Algorithms.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Encoding.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.X509Certificates.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Text.Json.8.0.0\lib\net462\System.Text.Json.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Threading.Channels.8.0.0\lib\net462\System.Threading.Channels.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\Microsoft.AspNet.WebApi.WebHost.5.3.0\lib\net45\System.Web.Http.WebHost.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Forms.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\WindowsBase.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\ZXing.Net.0.16.9\lib\net48\zxing.dll" />
+    <ReferencePath Include="C:\Users\Adeshina\Downloads\printloc-client-app\packages\ZXing.Net.0.16.9\lib\net48\zxing.presentation.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\Microsoft.Win32.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\netstandard.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.AppContext.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.Concurrent.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.NonGeneric.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Collections.Specialized.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.Annotations.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.EventBasedAsync.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.TypeConverter.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Console.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Data.Common.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Contracts.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Debug.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.FileVersionInfo.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Process.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.StackTrace.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.TextWriterTraceListener.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.Tools.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Diagnostics.TraceSource.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Drawing.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Dynamic.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Globalization.Calendars.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Globalization.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Globalization.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.Compression.ZipFile.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.DriveInfo.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.FileSystem.Watcher.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.IsolatedStorage.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.MemoryMappedFiles.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.Pipes.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.IO.UnmanagedMemoryStream.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.Expressions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Linq.Queryable.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Http.Rtc.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.NameResolution.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.NetworkInformation.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Ping.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Requests.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.Security.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.WebHeaderCollection.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.WebSockets.Client.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Net.WebSockets.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ObjectModel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Emit.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Emit.ILGeneration.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Emit.Lightweight.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Reflection.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Resources.Reader.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Resources.ResourceManager.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Resources.Writer.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.CompilerServices.VisualC.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Handles.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.InteropServices.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Numerics.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Formatters.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Json.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Runtime.Serialization.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Cryptography.Csp.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.Principal.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Security.SecureString.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Duplex.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.NetTcp.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ServiceModel.Security.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Text.Encoding.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Text.Encoding.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Text.RegularExpressions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Overlapped.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Tasks.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Tasks.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Thread.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.ThreadPool.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Threading.Timer.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.ReaderWriter.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XDocument.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XmlDocument.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XmlSerializer.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XPath.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.Xml.XPath.XDocument.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\HomepageControl.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\LoginControl.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\LoginView.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\PrinterList.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\PrinterListView.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\PrintJob.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\PrintJobView.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\Report.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\View\SidebarContent.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\App.g.cs" />
+    <Compile Include="C:\Users\Adeshina\Downloads\printloc-client-app\PrintLoc\obj\Debug\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+</Project>
