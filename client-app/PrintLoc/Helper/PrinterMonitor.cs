@@ -27,13 +27,11 @@ namespace PrintLoc.Helper
             printerCheckTimer.Elapsed += CheckPrinters;
             printerCheckTimer.AutoReset = true;
             printerCheckTimer.Start();
-
-            Console.WriteLine("Monitoring printers...");
         }
 
         private async void CheckPrinters(object sender, ElapsedEventArgs e)
         {
-            string deviceId = ConnectedDevice.Instance.DeviceId;
+            string deviceId = DeviceIdManager.GetDeviceId();
 
             if (!string.IsNullOrEmpty(deviceId))
             {
@@ -46,16 +44,11 @@ namespace PrintLoc.Helper
                     }
 
                     await DisplayPrinterInformation(printers);
-                    Console.WriteLine("Reading Printer");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error retrieving printer information: " + ex.Message);
                 }
-            }
-            else
-            {
-                Console.WriteLine("DeviceId is empty. Skipping printer check.");
             }
         }
 
@@ -63,9 +56,7 @@ namespace PrintLoc.Helper
         public async Task<List<DetailedPrinterInfo>> DisplayPrinterInformation(List<string> printers)
         {
             List<DetailedPrinterInfo> printerInfoList = new List<DetailedPrinterInfo>();
-            string token = AuthResult.Instance.Token;
-            string teamId = AuthResult.Instance.User.TeamId;
-            string deviceId = ConnectedDevice.Instance.DeviceId;
+            string deviceId = DeviceIdManager.GetDeviceId();
 
             foreach (string printer in printers)
             {
@@ -74,7 +65,7 @@ namespace PrintLoc.Helper
                 PrinterSettings settings = new PrinterSettings { PrinterName = printer };
                 printerInfo.PrinterColor = settings.SupportsColor ? "Color" : "Monochrome";
                 printerInfoList.Add(printerInfo);
-                await AccountManager.StoreDevicePrinter(deviceId, printerInfo.PrinterName, printerInfo.PrinterColor, teamId);
+                await AccountManager.StoreDevicePrinter(deviceId, printerInfo.PrinterName, printerInfo.PrinterColor);
             }
 
             return printerInfoList;
@@ -86,11 +77,6 @@ namespace PrintLoc.Helper
             {
                 printerCheckTimer.Stop();
                 printerCheckTimer.Dispose();
-                Console.WriteLine("Stopped monitoring printers.");
-            }
-            else
-            {
-                Console.WriteLine("Printer monitoring is not running.");
             }
         }
     }

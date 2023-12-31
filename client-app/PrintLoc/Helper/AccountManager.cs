@@ -18,7 +18,28 @@ namespace PrintLoc.Helper
 
         private static string apiUrl = ApiBaseUrl.BaseUrl;
 
+        private static string retrievedDeviceId = DeviceIdManager.GetDeviceId();
+
         private static readonly DeviceInformation deviceInformation = new DeviceInformation();
+
+        public static async Task<PrintJobModel> updatePrintJob(int Id, string Status, string Message)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(apiUrl + "api/PrintJob/UpdatePrintJob/" + Id + $"/{Status}/" + $"/{Message}");
+                if (response.IsSuccessStatusCode)
+                {
+                    PrintJobModel printJob = await response.Content.ReadAsAsync<PrintJobModel>();
+                    return printJob;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+        }
 
         public static async Task<Printer> getAllPrinters(string DeviceId, string Token)
         {
@@ -39,7 +60,7 @@ namespace PrintLoc.Helper
             }
         }
 
-        public static async Task<Printer> StoreDevicePrinter(string DeviceId, string Name, string PrinterColor, string TeamId)
+        public static async Task<Printer> StoreDevicePrinter(string DeviceId, string Name, string PrinterColor)
         {
             try
             {
@@ -48,7 +69,6 @@ namespace PrintLoc.Helper
                     DeviceId = DeviceId,
                     Name = Name,
                     PrinterColor = PrinterColor,
-                    TeamId = TeamId
                 };
                 var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(apiUrl + "api/Printer/SyncPrinterByTeamName", content);
@@ -62,7 +82,6 @@ namespace PrintLoc.Helper
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
                 return null;
             }
         }
@@ -87,7 +106,10 @@ namespace PrintLoc.Helper
                 if (response.IsSuccessStatusCode)
                 {
                     Device storedDevice = await response.Content.ReadAsAsync<Device>();
-                    ConnectedDevice.Instance.DeviceId = storedDevice.DeviceId;
+                    if(retrievedDeviceId != null)
+                    {
+                        DeviceIdManager.SaveDeviceId(storedDevice.DeviceId);
+                    }
                     return storedDevice;
                 }
                 return null;

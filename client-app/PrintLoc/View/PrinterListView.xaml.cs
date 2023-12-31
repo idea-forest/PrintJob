@@ -34,9 +34,9 @@ namespace PrintLoc.View
         {
             try
             {
-                string deviceId = ConnectedDevice.Instance.DeviceId;
+                string deviceId = DeviceIdManager.GetDeviceId();
                 string token = AuthResult.Instance.Token;
-                Printer printer = await AccountManager.getAllPrinters(deviceId, token); // Assuming this method retrieves a single Printer
+                Printer printer = await AccountManager.getAllPrinters(deviceId, token);
                 Printers = new ObservableCollection<Printer>();
                 if (printer != null)
                 {

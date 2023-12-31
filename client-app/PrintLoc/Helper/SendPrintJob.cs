@@ -1,54 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Client;
 using PrintLoc.Model;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace PrintLoc.Helper
 {
-    public class SendPrintJob
+    public class SignalRBackgroundService
     {
         private static string apiUrl = ApiBaseUrl.BaseUrl;
 
-        public async Task StartPrintJobListener(string deviceId)
+        private HubConnection hubConnection;
+        private CancellationTokenSource cancellationTokenSource;
+        private string deviceId = DeviceIdManager.GetDeviceId();
+
+        public async void StartSignalRConnectionInBackground()
         {
-            var hubConnection = new HubConnectionBuilder()
+            hubConnection = new HubConnectionBuilder()
                 .WithUrl(apiUrl + "printjob")
                 .Build();
 
-            hubConnection.On<PrintJobModel>("PrintJobReady", async (job) =>
+            hubConnection.On<PrintJobModel>("ReceivePrintJobs", async (job) =>
             {
-                if (job.DeviceId == deviceId && job.Status == "Pending")
-                {
-                    bool success = await SendToPrinter(job);
-                    if (success)
-                    {
-                    }
-                    else
-                    {
-
-                    }
-                }
+                Console.WriteLine(job);
+                await SendToPrinter(job);
+                //if (job.DeviceId == deviceId && job.Status == "Pending")
+                //{
+                //    await SendToPrinter(job);
+                //}
             });
 
+            cancellationTokenSource = new CancellationTokenSource();
+            await ConnectWithRetry(cancellationTokenSource.Token);
+        }
+
+        public void StopSignalRConnection()
+        {
+            cancellationTokenSource?.Cancel();
+            hubConnection?.StopAsync().Wait();
+            hubConnection?.DisposeAsync();
+        }
+
+        private async Task ConnectWithRetry(CancellationToken cancellationToken)
+        {
             try
             {
-                await hubConnection.StartAsync();
+                await hubConnection.StartAsync(cancellationToken);
                 Console.WriteLine("SignalR connection started.");
 
-                // Listen for incoming print job notifications
+                hubConnection.Closed += async (error) =>
+                {
+                    Console.WriteLine($"SignalR connection closed: {error?.Message}");
+                    await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+                    await ConnectWithRetry(cancellationToken);
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error starting SignalR connection: {ex.Message}");
-                // Handle connection start error
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+                await ConnectWithRetry(cancellationToken);
             }
         }
 
         private async Task<bool> SendToPrinter(PrintJobModel job)
         {
+            Print printHelper = new Print();
+            int JobId = job.Id;
+            string fileUrl = job.FilePath;
+            string printerName = job.PrinterName;
+            bool isColor = job.Color;
+            int startPage = job.StartPage;
+            int endPage = job.EndPage;
+            int numberOfCopies = job.Copies;
+            string paperName = job.PaperName;
+            bool landScape = job.LandScape;
+            await printHelper.PrintFileFromUrl(fileUrl, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId);
             return true;
         }
     }

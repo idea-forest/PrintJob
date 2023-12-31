@@ -17,10 +17,13 @@ namespace PrintLoc
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            //PrinterMonitor printerHelper = new PrinterMonitor();
-            //printerHelper.StartMonitoringPrinters();
-            //Console.WriteLine("Application started. Press any key to exit.");
+            PrinterMonitor printerHelper = new PrinterMonitor();
+            printerHelper.StartMonitoringPrinters();
             InternetConnectivityMonitor.StartMonitoring(5);
+
+            //call signalr job
+            SignalRBackgroundService signalBack= new SignalRBackgroundService();
+            signalBack.StartSignalRConnectionInBackground();
         }
 
     }
