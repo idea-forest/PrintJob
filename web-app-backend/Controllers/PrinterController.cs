@@ -27,6 +27,12 @@ namespace ProjectLoc.Controllers
             return Ok(printers);
         }
 
+        public async Task<int> GetTeamIdByDevice(string DeviceId)
+        {
+            Device device = await _context.Devices.Where(p => p.DeviceId == DeviceId).FirstOrDefaultAsync();
+            return device.TeamId;
+        }
+
         [HttpPost("SyncPrinterByTeamName")]
         public async Task<IActionResult> SyncPrinterByTeamName(CreatePrinterDTO printer)
         {
@@ -44,7 +50,7 @@ namespace ProjectLoc.Controllers
                     DeviceId = printer.DeviceId,
                     Name = printer.Name,
                     PrinterColor = printer.PrinterColor,
-                    TeamId = printer.TeamId
+                    TeamId = await GetTeamIdByDevice(printer.DeviceId)
                 };
                 await _context.Printers.AddAsync(newPrinter);
                 await _context.SaveChangesAsync();

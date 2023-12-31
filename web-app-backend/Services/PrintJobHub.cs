@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using ProjectLoc.Models;
 using ProjectLoc.Data;
+using ProjectLoc.Services;
+using System.Diagnostics;
 
-public class PrintJobHub : Hub
+public class PrintJobHub : Hub<PrintJobHubClient>
 {
-    private static List<PrintJob> printJobs = new List<PrintJob>();
-
     private readonly ApiDbContext _context;
 
     public PrintJobHub(ApiDbContext dbContext)
@@ -17,13 +17,25 @@ public class PrintJobHub : Hub
         _context = dbContext;
     }
 
-    public async Task GetPrintJobsByDeviceId(string deviceId)
+    public async Task OnConnected()
     {
-        List<PrintJob> printJobs = _context.PrintJobs
-                .Where(p => p.DeviceId == deviceId)
-                .Where(p => p.Status == "Pending")
-                .OrderByDescending(p => p.CreatedAt)
-                .ToList();
-        await Clients.Caller.SendAsync("ReceivePrintJobs", printJobs);
+        Console.WriteLine(Context.ConnectionId);
+        await base.OnConnectedAsync();
+    }
+
+    public async Task OnDisconnected(Exception exception)
+    {
+        Console.WriteLine(Context.ConnectionId);
+        await base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task OnReconnected()
+    {
+
+    }
+
+    public async Task ReceivePrintJobs(PrintJob job)
+    {
+        await Clients.All.ReceivePrintJobs(job);
     }
 }

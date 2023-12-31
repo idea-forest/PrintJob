@@ -15,14 +15,6 @@ namespace ProjectLoc.Controllers
             _iManageImage = iManageImage;
         }
 
-        [HttpPost]
-        [Route("uploadfile")]
-        public async Task<IActionResult> UploadFile(IFormFile _IFormFile)
-        {
-            var result = await _iManageImage.UploadFile(_IFormFile);
-            return Ok(result);
-        }
-
         [HttpGet]
         [Route("downloadfile")]
         public async Task<IActionResult> DownloadFile(string FileName)

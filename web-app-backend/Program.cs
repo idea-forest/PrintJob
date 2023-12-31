@@ -57,6 +57,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => { options.SignIn
     .AddEntityFrameworkStores<ApiDbContext>();
 
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<PrintJobService>();
 
 var app = builder.Build();
 
@@ -85,13 +86,6 @@ app.UseAuthorization();
 app.UseAuthentication();
 
 app.MapControllers();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapHub<ConnectionStatusHub>("/checkConnection");
-    endpoints.MapHub<PrintJobHub>("/printjob");
-});
-
-
+app.MapHub<ConnectionStatusHub>("/checkConnection");
+app.MapHub<PrintJobHub>("/printjob");
 app.Run();

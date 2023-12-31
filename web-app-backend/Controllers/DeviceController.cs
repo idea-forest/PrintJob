@@ -38,7 +38,10 @@ namespace ProjectLoc.Controllers
         {
             if (!device.Equals(null))
             {
-                Device? existDevice = await _context.Devices.FirstOrDefaultAsync(t => t.DeviceId == device.DeviceId);
+                Device? existDevice = await _context.Devices
+                    .Where(d => d.DeviceId == device.DeviceId || d.TeamId == device.TeamId)
+                    .FirstOrDefaultAsync();
+
                 if (existDevice != null)
                 {
                     return Ok(existDevice);
