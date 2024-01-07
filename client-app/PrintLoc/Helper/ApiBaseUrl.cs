@@ -8,6 +8,6 @@ namespace PrintLoc.Helper
 {
     class ApiBaseUrl
     {
-        public static string BaseUrl { get; } = "http://localhost:5281/";
+        public static string BaseUrl { get; } = "http://72.167.140.189:5289/";
     }
 }

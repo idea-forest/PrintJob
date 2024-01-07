@@ -47,4 +47,25 @@ public class DeviceIdManager
             return null;
         }
     }
+
+    public static void DeleteFile()
+    {
+        try
+        {
+            string filePath = Path.Combine(Path.GetTempPath(), FileName);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                Console.WriteLine("File deleted successfully!");
+            }
+            else
+            {
+                Console.WriteLine("File does not exist.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting file: {ex.Message}");
+        }
+    }
 }

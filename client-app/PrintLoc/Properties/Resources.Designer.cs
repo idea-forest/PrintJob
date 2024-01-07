@@ -124,7 +124,7 @@ namespace PrintLoc.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Homepage PrintLoc.
+        ///   Looks up a localized string similar to Homepage Printbloc.
         /// </summary>
         internal static string HomepageWindowTitle {
             get {

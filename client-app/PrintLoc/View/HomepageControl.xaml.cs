@@ -19,12 +19,13 @@ namespace PrintLoc.View
         private string deviceId = DeviceIdManager.GetDeviceId();
 
         private Timer connectivityCheckTimer;
+        private bool deviceIDPresent = false;
         public HomepageControl()
         {
             InitializeComponent();
-            InitializeAsync();
             OnInternetConnectivityChanged();
             StartInternetConnectivityCheck();
+            _ = UpdateQRCode();
         }
 
         private void StartInternetConnectivityCheck()
@@ -75,15 +76,22 @@ namespace PrintLoc.View
             });
         }
 
-        private Task InitializeAsync()
+        private async Task UpdateQRCode()
         {
             int width = 200;
             int height = 200;
+            while (!deviceIDPresent)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(3));
 
-            BitmapImage qrCodeBitmap = Qrcode.GenerateQRCode(deviceId, width, height);
-            DeviceIDText.Text = $"Device ID: {deviceId}";
-            QRCodeImage.Source = qrCodeBitmap;
-            return Task.CompletedTask;
+                if (deviceId != null)
+                {
+                    deviceIDPresent = true; // Set flag to true to stop further refreshing
+                    BitmapImage qrCodeBitmap = Qrcode.GenerateQRCode(deviceId, width, height);
+                    DeviceIDText.Text = $"Device ID: {deviceId}";
+                    QRCodeImage.Source = qrCodeBitmap;
+                }
+            }
         }
     }
 }

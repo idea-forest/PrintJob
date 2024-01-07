@@ -22,11 +22,12 @@ namespace PrintLoc.Helper
 
         private static readonly DeviceInformation deviceInformation = new DeviceInformation();
 
-        public static async Task<PrintJobModel> updatePrintJob(int Id, string Status, string Message)
+        public static async Task<PrintJobModel> updatePrintJob(int Id, string Status, string Message, int PageNo, string Type)
         {
             try
             {
-                HttpResponseMessage response = await client.GetAsync(apiUrl + "api/PrintJob/UpdatePrintJob/" + Id + $"/{Status}/" + $"/{Message}");
+                HttpResponseMessage response = await client.GetAsync(apiUrl + "api/PrintJob/UpdatePrintJob/" + Id + $"/{Status}/" + $"{Message}/{PageNo}/{Type}");
+                Console.WriteLine(response + apiUrl + "api/PrintJob/UpdatePrintJob/" + Id + $"/{Status}/" + $"{Message}/{PageNo}/{Type}");
                 if (response.IsSuccessStatusCode)
                 {
                     PrintJobModel printJob = await response.Content.ReadAsAsync<PrintJobModel>();
@@ -107,6 +108,10 @@ namespace PrintLoc.Helper
                 {
                     Device storedDevice = await response.Content.ReadAsAsync<Device>();
                     if(retrievedDeviceId != null)
+                    {
+                        DeviceIdManager.DeleteFile();
+                        DeviceIdManager.SaveDeviceId(storedDevice.DeviceId);
+                    } else
                     {
                         DeviceIdManager.SaveDeviceId(storedDevice.DeviceId);
                     }

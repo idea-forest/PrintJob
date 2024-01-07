@@ -22,7 +22,7 @@ public class InternetConnectivityMonitor
     private static void OnTimedEvent(object sender, ElapsedEventArgs e)
     {
         bool isConnected = IsConnectedToInternet();
-        Status.Instance.Online = isConnected;
+        //Status.Instance.Online = isConnected;
     }
 
     public static bool IsConnectedToInternet()

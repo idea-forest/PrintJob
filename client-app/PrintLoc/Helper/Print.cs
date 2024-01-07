@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Word;
+using OfficeOpenXml;
 using PdfiumViewer;
 using Application = Microsoft.Office.Interop.Word.Application;
 using PageSetup = Microsoft.Office.Interop.Word.PageSetup;
@@ -33,8 +34,7 @@ namespace PrintLoc.Helper
                 {
                     bool printStatus = false;
                     string tempFilePath = await DownloadFileAsync(fileUrl);
-
-                    if (!string.IsNullOrEmpty(tempFilePath) && File.Exists(tempFilePath))
+                    if (!string.IsNullOrEmpty(tempFilePath))
                     {
                         try
                         {
@@ -46,19 +46,19 @@ namespace PrintLoc.Helper
                                 case ".jpeg":
                                 case ".png":
                                 case ".gif":
-                                    printStatus = await PrintImage(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId);
+                                    printStatus = await PrintImage(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId, fileExtension);
                                     break;
                                 case ".pdf":
-                                    printStatus = await PrintPdf(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId);
+                                    Console.WriteLine("started printing");
+                                    printStatus = await PrintPdf(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId, fileExtension);
                                     break;
                                 case ".doc":
                                 case ".docx":
-                                    printStatus = await PrintWordDocument(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId);
+                                    printStatus = await PrintWordDocument(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId, fileExtension);
                                     break;
                                 case ".xls":
                                 case ".xlsx":
-                                case ".csv":
-                                    printStatus = await PrintExcelDocument(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId);
+                                    printStatus = await PrintExcelDocument(tempFilePath, printerName, paperName, isColor, startPage, endPage, landScape, numberOfCopies, JobId, fileExtension);
                                     break;
                                 default:
                                     Console.WriteLine("Unsupported file type for printing.");
@@ -93,8 +93,10 @@ namespace PrintLoc.Helper
             int endPage,
             bool landScape,
             int numberOfCopies,
-            int JobId)
+            int JobId,
+            string fileExtension)
         {
+            int counter = 0;
             try
             {
                 var printerSettings = new PrinterSettings
@@ -124,21 +126,24 @@ namespace PrintLoc.Helper
                     {
                         printDocument.PrinterSettings = printerSettings;
                         printDocument.DefaultPageSettings = pageSettings;
+                        printDocument.OriginAtMargins = true;
+                        printDocument.PrinterSettings.FromPage = startPage;
+                        printDocument.PrinterSettings.ToPage = endPage;
                         printDocument.PrintPage += (s, e) =>
                         {
                             Point loc = new Point(100, 100);
                             e.Graphics.DrawImage(imageToPrint, loc);
+                            counter++;
                         };
-                        printDocument.OriginAtMargins = true;
-                        printDocument.PrinterSettings.FromPage = startPage;
-                        printDocument.PrinterSettings.ToPage = endPage;
                         printDocument.Print();
                     }
   
                 }
+
+                Console.WriteLine("Document printed"+ counter);
                 String Status = "printed";
                 String Message = "Document printed succesfully";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
                 return true;
             }
             catch(Exception ex)
@@ -146,7 +151,7 @@ namespace PrintLoc.Helper
 
                 String Status = "failed";
                 String Message = $"Error printing your document: {ex.Message}";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
                 return false;
             }
         }
@@ -160,8 +165,10 @@ namespace PrintLoc.Helper
             int endPage,
             bool landScape,
             int numberOfCopies,
-            int JobId)
+            int JobId,
+            string fileExtension)
         {
+            int counter = 0;
             try
             {
                 var printerSettings = new PrinterSettings
@@ -175,6 +182,7 @@ namespace PrintLoc.Helper
                     Margins = new Margins(0, 0, 0, 0),
                     Landscape = landScape,
                 };
+
                 foreach (PaperSize papersize in printerSettings.PaperSizes)
                 {
                     if (papersize.PaperName == paperName)
@@ -193,12 +201,15 @@ namespace PrintLoc.Helper
                         printDocument.OriginAtMargins = true;
                         printDocument.PrinterSettings.FromPage = startPage;
                         printDocument.PrinterSettings.ToPage = endPage;
+                        printDocument.PrintPage += (sender, e) => counter++;
                         printDocument.Print();
                     }
                 }
+
+                Console.WriteLine("Document printed" + counter);
                 String Status = "printed";
                 String Message = "Document printed succesfully";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
                 return true;
             }
             catch (Exception ex)
@@ -206,10 +217,34 @@ namespace PrintLoc.Helper
 
                 String Status = "failed";
                 String Message = $"Error printing your document: {ex.Message}";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
                 return false;
             }
         }
+
+        //public PaperSizeType GetPaperType(string paperName)
+        //{
+        //    PaperSizeType result;
+        //    switch (paperName.ToLower())
+        //    {
+        //        case "a3":
+        //            result = PaperSizeType.PaperA3;
+        //            break;
+        //        case "a4":
+        //            result = PaperSizeType.PaperA4;
+        //            break;
+        //        case "letter":
+        //            result = PaperSizeType.PaperLetter;
+        //            break;
+        //        case "legal":
+        //            result = PaperSizeType.PaperLegal;
+        //            break;
+        //        default:
+        //            result = PaperSizeType.PaperLetter;
+        //            break;
+        //    }
+        //    return result;
+        //}
 
         public WdPaperSize GetWordPaperSize(string paperName)
         {
@@ -289,19 +324,113 @@ namespace PrintLoc.Helper
             return result;
         }
 
+        //public async Task<bool> PrintWordDocument(
+        //   string documentPath,
+        //   string printerName,
+        //   string paperName,
+        //   bool isColor,
+        //   int startPage,
+        //   int endPage,
+        //   bool landscape,
+        //   int numberOfCopies,
+        //   int jobId,
+        //   string fileExtension)
+        //{
+        //    bool printStatus = false;
+        //    int counter = 0;
+        //    Application wordApp = null;
+        //    Document document = null;
+
+        //    try
+        //    {
+        //        wordApp = new Application();
+        //        object missing = System.Reflection.Missing.Value;
+        //        document = wordApp.Documents.Open(documentPath, ReadOnly: true, Visible: false);
+        //        document.Activate();
+        //        wordApp.ActivePrinter = printerName;
+        //        wordApp.Options.PrintBackground = isColor;
+        //        wordApp.Options.PrintBackgrounds = isColor;
+
+        //        counter = document.ComputeStatistics(WdStatistic.wdStatisticPages);
+
+        //        foreach (Section section in document.Sections)
+        //        {
+        //            PageSetup pageSetup = section.PageSetup;
+        //            pageSetup.Orientation = landscape ? WdOrientation.wdOrientLandscape : WdOrientation.wdOrientPortrait;
+
+        //            if (pageSetup.PaperSize != GetWordPaperSize(paperName))
+        //            {
+        //                try
+        //                {
+        //                    pageSetup.PaperSize = GetWordPaperSize(paperName);
+        //                }
+        //                catch (ArgumentException)
+        //                {
+        //                    Console.WriteLine($"Paper size '{paperName}' not found. Using default paper size.");
+        //                }
+        //            }
+        //        }
+
+        //        object range = WdPrintOutRange.wdPrintRangeOfPages;
+        //        object fromPage = startPage;
+        //        object toPage = endPage;
+
+
+        //        object ranges = WdPrintOutRange.wdPrintFromTo;
+        //        document.PrintOut(
+        //            Copies: numberOfCopies,
+        //            Background: true,
+        //            Range: ranges,
+        //            From: fromPage,
+        //            To: toPage);
+
+        //        document.Close(SaveChanges: false);
+        //        wordApp.Quit();
+        //        Marshal.ReleaseComObject(document);
+        //        Marshal.ReleaseComObject(wordApp);
+        //        printStatus = true;
+
+        //        string status = "printed";
+        //        string message = "Document printed successfully";
+        //        await AccountManager.updatePrintJob(jobId, status, message, counter, fileExtension);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string status = "failed";
+        //        string message = $"Error printing your document: {ex.Message}";
+        //        await AccountManager.updatePrintJob(jobId, status, message, counter, fileExtension);
+        //        printStatus = false;
+
+        //        if (document != null)
+        //        {
+        //            document.Close(SaveChanges: false);
+        //            Marshal.ReleaseComObject(document);
+        //        }
+
+        //        if (wordApp != null)
+        //        {
+        //            wordApp.Quit();
+        //            Marshal.ReleaseComObject(wordApp);
+        //        }
+        //    }
+
+        //    return printStatus;
+        //}
+
         public async Task<bool> PrintWordDocument(
-            string documentPath,
-            string printerName,
-            string paperName,
-            bool isColor,
-            int startPage,
-            int endPage,
-            bool landScape,
-            int numberOfCopies,
-            int JobId)
+                    string documentPath,
+                    string printerName,
+                    string paperName,
+                    bool isColor,
+                    int startPage,
+                    int endPage,
+                    bool landScape,
+                    int numberOfCopies,
+                    int JobId,
+                    string fileExtension)
         {
             bool printStatus = false;
-
+            int counter = 0;
             try
             {
                 Application wordApp = new Application();
@@ -330,27 +459,6 @@ namespace PrintLoc.Helper
                 object end = endPage;
                 object range = WdPrintOutRange.wdPrintRangeOfPages;
 
-                document.PrintOut(
-                    ref missing,
-                    ref missing,
-                    range,
-                    isColor ? "Color" : "BlackAndWhite",
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing,
-                    ref missing
-                );
-
                 object fromPage = startPage;
                 object toPage = endPage;
                 object ranges = WdPrintOutRange.wdPrintFromTo;
@@ -361,14 +469,14 @@ namespace PrintLoc.Helper
 
                 String Status = "printed";
                 String Message = "Document printed succesfully";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
             }
             catch (Exception ex)
             {
 
                 String Status = "failed";
                 String Message = $"Error printing your document: {ex.Message}";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
                 printStatus = false;
             }
 
@@ -384,28 +492,31 @@ namespace PrintLoc.Helper
             int endPage,
             bool landScape,
             int numberOfCopies,
-            int JobId)
+            int JobId,
+            string fileExtension)
         {
             bool printStatus = false;
+            int counter = 0;
             Microsoft.Office.Interop.Excel.Application excelApp = null;
-            Microsoft.Office.Interop.Excel.Workbook workbook = null;
-
             try
             {
                 excelApp = new Microsoft.Office.Interop.Excel.Application();
-                workbook = excelApp.Workbooks.Open(documentPath);
-                excelApp.ActivePrinter = printerName;
+                Microsoft.Office.Interop.Excel.Workbook workbook = excelApp.Workbooks.Open(documentPath);
+                Microsoft.Office.Interop.Excel.Worksheet worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets.Item[1];
 
-                foreach (Microsoft.Office.Interop.Excel.Worksheet worksheet in workbook.Worksheets)
+                excelApp.ActivePrinter = printerName;
+                workbook.Activate();
+
+                foreach (Microsoft.Office.Interop.Excel.Worksheet sheet in workbook.Sheets)
                 {
-                    worksheet.PageSetup.Orientation = setExcelPageOrientation(landScape);
-                    if (worksheet.PageSetup.PaperSize != GetExcelPaperSize(paperName))
+                    sheet.PageSetup.Orientation = landScape ? Microsoft.Office.Interop.Excel.XlPageOrientation.xlLandscape : Microsoft.Office.Interop.Excel.XlPageOrientation.xlPortrait;
+                    if (sheet.PageSetup.PaperSize != XlPaperSize.xlPaperLetter)
                     {
                         try
                         {
-                            worksheet.PageSetup.PaperSize = GetExcelPaperSize(paperName);
+                            sheet.PageSetup.PaperSize = GetExcelPaperSize(paperName);
                         }
-                        catch (ArgumentException)
+                        catch (Exception)
                         {
                             Console.WriteLine($"Paper size '{paperName}' not found. Using default paper size.");
                         }
@@ -414,26 +525,40 @@ namespace PrintLoc.Helper
 
                 object fromPage = startPage;
                 object toPage = endPage;
-                workbook.PrintOutEx(Copies: numberOfCopies, From: fromPage, To: toPage, ActivePrinter: printerName);
+                object copies = numberOfCopies;
+                object pages = $"{startPage}-{endPage}";
+
+                worksheet.PrintOut(
+                    From: fromPage,
+                    To: toPage,
+                    Copies: copies,
+                    Preview: false,
+                    ActivePrinter: printerName,
+                    PrintToFile: false,
+                    Collate: true);
+
                 workbook.Close(SaveChanges: false);
                 excelApp.Quit();
                 printStatus = true;
 
                 String Status = "printed";
-                String Message = "Document printed succesfully";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                String Message = "Document printed successfully";
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
             }
             catch (Exception ex)
             {
                 String Status = "failed";
                 String Message = $"Error printing your document: {ex.Message}";
-                await AccountManager.updatePrintJob(JobId, Status, Message);
+                await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
                 printStatus = false;
             }
             finally
             {
-                ReleaseObject(workbook);
-                ReleaseObject(excelApp);
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    Marshal.ReleaseComObject(excelApp);
+                }
             }
 
             return printStatus;

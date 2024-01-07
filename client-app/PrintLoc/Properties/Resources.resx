@@ -139,7 +139,7 @@
     <value>PrintLoc.View.HomepageControl</value>
   </data>
   <data name="HomepageWindowTitle" xml:space="preserve">
-    <value>Homepage PrintLoc</value>
+    <value>Homepage Printbloc</value>
   </data>
   <data name="LoginControlPath" xml:space="preserve">
     <value>PrintLoc.View.LoginControl</value>
