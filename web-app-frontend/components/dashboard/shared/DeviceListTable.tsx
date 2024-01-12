@@ -25,18 +25,13 @@ import {
   ChevronLeftIcon
 } from "@chakra-ui/icons";
 
-import makeData from "./makeData";
-
-export const DeviceListTable = ({ columns, data }) => {
+export const DeviceListTable = ({ columns: any, data: any }) => {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
+    page,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -55,15 +50,14 @@ export const DeviceListTable = ({ columns, data }) => {
     usePagination
   );
 
-  // Render the UI for your table
   return (
     <>
       <Table {...getTableProps()}>
         <Thead>
-          {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <Th {...column.getHeaderProps()}>{column.render("Header")}</Th>
+          {headerGroups.map((headerGroup, index) => (
+            <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, i) => (
+                <Th {...column.getHeaderProps()} key={i}>{column.render("Header")}</Th>
               ))}
             </Tr>
           ))}
@@ -72,10 +66,10 @@ export const DeviceListTable = ({ columns, data }) => {
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <Tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
+              <Tr {...row.getRowProps()} key={i}>
+                {row.cells.map((cell, index) => {
                   return (
-                    <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                    <Td {...cell.getCellProps()} key={index}>{cell.render("Cell")}</Td>
                   );
                 })}
               </Tr>
@@ -91,15 +85,13 @@ export const DeviceListTable = ({ columns, data }) => {
               onClick={() => gotoPage(0)}
               isDisabled={!canPreviousPage}
               icon={<ArrowLeftIcon h={3} w={3} />}
-              mr={4}
-            />
+              mr={4} aria-label={""}            />
           </Tooltip>
           <Tooltip label="Previous Page">
             <IconButton
               onClick={previousPage}
               isDisabled={!canPreviousPage}
-              icon={<ChevronLeftIcon h={6} w={6} />}
-            />
+              icon={<ChevronLeftIcon h={6} w={6} />} aria-label={""}            />
           </Tooltip>
         </Flex>
 
@@ -121,7 +113,7 @@ export const DeviceListTable = ({ columns, data }) => {
             w={28}
             min={1}
             max={pageOptions.length}
-            onChange={(value) => {
+            onChange={(value: any) => {
               const page = value ? value - 1 : 0;
               gotoPage(page);
             }}
@@ -153,16 +145,14 @@ export const DeviceListTable = ({ columns, data }) => {
             <IconButton
               onClick={nextPage}
               isDisabled={!canNextPage}
-              icon={<ChevronRightIcon h={6} w={6} />}
-            />
+              icon={<ChevronRightIcon h={6} w={6} />} aria-label={""}            />
           </Tooltip>
           <Tooltip label="Last Page">
             <IconButton
               onClick={() => gotoPage(pageCount - 1)}
               isDisabled={!canNextPage}
               icon={<ArrowRightIcon h={3} w={3} />}
-              ml={4}
-            />
+              ml={4} aria-label={""}            />
           </Tooltip>
         </Flex>
       </Flex>
