@@ -4,7 +4,8 @@ namespace ProjectLoc.Dtos.Printer
 {
     public class CreatePrintJobDTO
     {
-        //public IFormFile File { get; set; }
+        [Required]
+        public string FilePath { get; set; }
 
         [Required]
         public bool Color { get; set; }
@@ -15,9 +16,6 @@ namespace ProjectLoc.Dtos.Printer
 
         [Required]
         public int Copies { get; set; }
-
-        [Required]
-        public int TeamId { get; set; }
 
         [Required]
         public string DeviceId { get; set; }

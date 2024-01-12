@@ -27,35 +27,44 @@ namespace ProjectLoc.Controllers
             return Ok(printers);
         }
 
-        public async Task<int> GetTeamIdByDevice(string DeviceId)
+        public async Task<int> GetTeamIdByDeviceAsync(string DeviceId)
         {
-            Device device = await _context.Devices.Where(p => p.DeviceId == DeviceId).FirstOrDefaultAsync();
+            Device device = await _context.Devices.FirstOrDefaultAsync(p => p.DeviceId == DeviceId);
+            if (device == null)
+            {
+                return 0;
+            }
             return device.TeamId;
         }
 
         [HttpPost("SyncPrinterByTeamName")]
         public async Task<IActionResult> SyncPrinterByTeamName(CreatePrinterDTO printer)
         {
-            if (!printer.Equals(null))
+            if (printer != null)
             {
                 Printer existingPrinter = await _context.Printers.FirstOrDefaultAsync(t => t.Name == printer.Name && t.DeviceId == printer.DeviceId);
 
                 if (existingPrinter != null)
                 {
-                    throw new Exception("Printer with the specified name and device ID already exists.");
+                    return BadRequest("Printer with the specified name and device ID already exists.");
                 }
 
-                Printer newPrinter = new Printer()
+                int getTeamId = await GetTeamIdByDeviceAsync(printer.DeviceId);
+                if (getTeamId != 0)
                 {
-                    DeviceId = printer.DeviceId,
-                    Name = printer.Name,
-                    PrinterColor = printer.PrinterColor,
-                    TeamId = await GetTeamIdByDevice(printer.DeviceId)
-                };
-                await _context.Printers.AddAsync(newPrinter);
-                await _context.SaveChangesAsync();
+                    Printer newPrinter = new Printer()
+                    {
+                        DeviceId = printer.DeviceId,
+                        Name = printer.Name,
+                        PrinterColor = printer.PrinterColor,
+                        TeamId = getTeamId
+                    };
+                    await _context.Printers.AddAsync(newPrinter);
+                    await _context.SaveChangesAsync();
 
-                return Ok(newPrinter);
+                    return Ok(newPrinter);
+                }
+                return NotFound();
             }
             return new JsonResult("Something went wrong") { StatusCode = 500 };
         }

@@ -260,8 +260,5 @@ public class AuthController : ControllerBase
             Errors = new List<string> { "invalid Payload" },
             Success = false
         });
-
-
-
     }
 }

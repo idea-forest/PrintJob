@@ -42,7 +42,7 @@ public class JwtService : IJwtService
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
-            Expires = DateTime.UtcNow.AddSeconds(35),
+            Expires = null, // DateTime.UtcNow.AddSeconds(35),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
@@ -72,7 +72,7 @@ public class JwtService : IJwtService
             Token = jwtToken,
             RefreshToken = refreshToken.Token,
             Success = true,
-
+            User = user,
         };
 
     }

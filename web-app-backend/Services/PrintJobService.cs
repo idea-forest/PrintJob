@@ -22,40 +22,54 @@ namespace ProjectLoc.Services
             _iManageImage = iManageImage;
         }
 
-        public async Task UpdatePrintJob(int JobId, string Status, string Message)
+        public async Task<int> GetTeamIdByDeviceAsync(string DeviceId)
         {
-            Console.WriteLine(Message);
-            PrintJob printJob = await _context.PrintJobs.FirstOrDefaultAsync(t => t.Id == JobId);
+            Device? device = await _context.Devices.FirstOrDefaultAsync(p => p.DeviceId == DeviceId);
+            if (device == null)
+            {
+                return 0;
+            }
+            return device.TeamId;
+        }
+
+        public async Task UpdatePrintJob(int JobId, string Status, string Message, int PageNo, string Type)
+        {
+            PrintJob? printJob = await _context.PrintJobs.FirstOrDefaultAsync(t => t.Id == JobId);
             if(printJob != null)
             {
                 printJob.Status = Status;
                 printJob.Message = Message;
+                printJob.Page = PageNo;
+                printJob.Type = Type;
+                await _context.SaveChangesAsync();
             }
-            _context.PrintJobs.Update(printJob);
-            await _context.SaveChangesAsync();
         }
 
         public async Task CreatePrintJob([FromBody] CreatePrintJobDTO job)
         {
-            PrintJob newPrintJob = new PrintJob()
+            int getTeamId = await GetTeamIdByDeviceAsync(job.DeviceId);
+            if (getTeamId != 0)
             {
-                FilePath = "https://umanitoba.ca/faculties/graduate_studies/media/InteriorDesign_200609.doc",
-                Color = job.Color,
-                StartPage = job.StartPage,
-                Status = "pending",
-                EndPage = job.EndPage,
-                Copies = job.Copies,
-                TeamId = job.TeamId,
-                DeviceId = job.DeviceId,
-                PrinterName = job.PrinterName,
-                PaperName = job.PaperName,
-                UserId = job.UserId,
-                LandScape = job.LandScape,
-                CreatedAt = new DateTime()
-            };
-            _context.PrintJobs.Add(newPrintJob);
-            await _context.SaveChangesAsync();
-            await _hubContext.Clients.All.ReceivePrintJobs(newPrintJob);
+                PrintJob newPrintJob = new PrintJob()
+                {
+                    FilePath = job.FilePath,
+                    Color = job.Color,
+                    StartPage = job.StartPage,
+                    Status = "pending",
+                    EndPage = job.EndPage,
+                    Copies = job.Copies,
+                    TeamId = getTeamId,
+                    DeviceId = job.DeviceId,
+                    PrinterName = job.PrinterName,
+                    PaperName = job.PaperName,
+                    UserId = job.UserId,
+                    LandScape = job.LandScape,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _context.PrintJobs.Add(newPrintJob);
+                await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.ReceivePrintJobs(newPrintJob);
+            }
         }
 
         public async Task<string> UploadFile(IFormFile file)

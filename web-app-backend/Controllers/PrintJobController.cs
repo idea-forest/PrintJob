@@ -24,10 +24,10 @@ namespace ProjectLoc.Controllers
             return Ok("Print Job Sent Succesfully");
         }
 
-        [HttpGet("UpdatePrintJob/{JobId}/{Status}/{Message}")]
-        public async Task<IActionResult> UpdatePrintJob(int JobId, string Status, string Message)
+        [HttpGet("UpdatePrintJob/{JobId}/{Status}/{Message}/{PageNo}/{Type}")]
+        public async Task<IActionResult> UpdatePrintJob(int JobId, string Status, string Message, int PageNo, string Type)
         {
-            await _printJobService.UpdatePrintJob(JobId, Status, Message);
+            await _printJobService.UpdatePrintJob(JobId, Status, Message, PageNo, Type);
             return Ok("Print Job Updated Successfully");
         }
     }
