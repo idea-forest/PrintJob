@@ -12,6 +12,24 @@ export const deviceItems: NavItemProps[] = [
   {
     icon: TfiMenuAlt,
     title: 'Device Management',
+    path: DashRoutes.deviceList,
+    id: nanoid(),
+  },
+  {
+    icon: TfiMenuAlt,
+    title: 'Device Management',
+    path: DashRoutes.device,
+    id: nanoid(),
+  },
+  {
+    icon: TfiMenuAlt,
+    title: 'Device Management',
+    path: DashRoutes.device,
+    id: nanoid(),
+  },
+  {
+    icon: TfiMenuAlt,
+    title: 'Device Management',
     path: DashRoutes.device,
     id: nanoid(),
   },

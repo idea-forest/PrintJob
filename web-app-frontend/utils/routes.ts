@@ -6,4 +6,5 @@ export class DashRoutes {
   static device = '/device';
 
   static settings = `${this.dashboard}/settings`;
+  static deviceList = `${this.device}/list`;
 }

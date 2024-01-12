@@ -20,6 +20,8 @@ import Link from "next/link";
 import { useUserStore } from "utils/fetch-utils";
 import { UserService } from "models/UserService";
 import Toast from "components/dashboard/shared/Toast";
+import { useUserContext } from "context";
+import { useRouter } from "next/router";
 
 interface FormValues {
   teamname: string;
@@ -54,6 +56,8 @@ export default function Login(): JSX.Element {
   const [teamNameExists, setTeamNameExists] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [teamId, setTeamId] = useState("");
+  const { updateUserInfo } = useUserContext();
+  const router = useRouter();
 
   const handleSubmit = async (
     values: FormValues,
@@ -79,20 +83,28 @@ export default function Login(): JSX.Element {
   const handleLoginSubmit = async (
     values: LoginValues,
     actions: FormikHelpers<LoginValues>
-  ): Promise<void> => {
+  ) => {
     setIsLoading(true);
 
     try {
+      const response = await userStore.login(teamId, values.email, values.password);
       setTimeout(() => {
+        if (!response.success) {
+          Toast(response?.error, 'error');
+          throw new Error(response?.error); 
+        }
+        updateUserInfo(response);
         setIsLoading(false);
         actions.setSubmitting(false);
+        Toast('Login Succesfull', 'success');
+        router.push("/dashboard");
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
+      Toast(error, 'error');
       console.error("Login failed:", error);
       setIsLoading(false);
     }
   };
-
   return (
     <AuthComponent height="100vh">
       <Box

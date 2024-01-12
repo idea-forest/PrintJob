@@ -4,6 +4,7 @@ import { UserService } from 'models/UserService';
 import { authHeader } from './auth-header';
 import { ApiRoutes } from './api-route';
 
+
 export const useUserStore = create<UserService>((set) => ({
   user: null,
   isLoading: false,
@@ -70,20 +71,19 @@ export const useUserStore = create<UserService>((set) => ({
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        const errorResponse = await response.json();
+        return errorResponse[0];
       }
 
       const user = await response.json();
 
       if (user && user.token) {
-        localStorage.setItem('user', JSON.stringify(user));
-        set({ user, isLoading: false, error: null });
+        localStorage.setItem("user", JSON.stringify(response));
       }
 
       return user;
     } catch (error) {
-      set({ isLoading: false, error: error.message || 'Login failed' });
-      throw error;
+      throw new Error('Login failed');
     }
   },
 
@@ -141,6 +141,6 @@ export const useUserStore = create<UserService>((set) => ({
 
   logout: () => {
     localStorage.removeItem('user');
-    set({ user: null, error: null });
   },
 }));
+
