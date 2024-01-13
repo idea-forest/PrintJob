@@ -25,7 +25,7 @@ import {
   ChevronLeftIcon
 } from "@chakra-ui/icons";
 
-export const DeviceListTable = ({ columns: any, data: any }) => {
+export const DeviceListTable = ({ columns, data }) => {
   const {
     getTableProps,
     getTableBodyProps,

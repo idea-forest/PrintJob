@@ -1,27 +1,10 @@
 import { DEFAULT_STYLES } from "styles";
 import React, { useMemo } from "react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Box,
-  VStack,
-  TableContainer,
-  Grid,
-  chakra,
-} from "@chakra-ui/react";
-import { useTable, useSortBy } from "react-table";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { DashBoardLayout } from "layout";
-import { Header, ColumnFlex } from "components";
-interface ConvertData {
-  fromUnit: string;
-  toUnit: string;
-  factor: number;
-}
+import { Header} from "components";
+import { DeviceListTable } from "components/dashboard/shared/DeviceListTable";
+import { Grid } from "@chakra-ui/react";
+
 
 interface DeviceListProps {}
 
@@ -66,9 +49,6 @@ const DeviceList: React.FC<DeviceListProps> = () => {
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
-
   const topbar = (
     <Header fontSize={{ base: "1.1rem", md: "1.5rem" }}>Device List</Header>
   );
@@ -88,48 +68,7 @@ const DeviceList: React.FC<DeviceListProps> = () => {
         px={DEFAULT_STYLES.mobilePx}
         w={DEFAULT_STYLES.fullWidth}
       >
-          <Table variant='simple' {...getTableProps()}>
-            <Thead>
-              {headerGroups.map((headerGroup) => (
-                <Tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <Th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      isNumeric={column.isNumeric}
-                    >
-                      {column.render("Header")}
-                      <chakra.span pl="4">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <TriangleDownIcon aria-label="sorted descending" />
-                          ) : (
-                            <TriangleUpIcon aria-label="sorted ascending" />
-                          )
-                        ) : null}
-                      </chakra.span>
-                    </Th>
-                  ))}
-                </Tr>
-              ))}
-            </Thead>
-            <Tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
-                prepareRow(row);
-                return (
-                  <Tr {...row.getRowProps()}>
-                    {row.cells.map((cell) => (
-                      <Td
-                        {...cell.getCellProps()}
-                        isNumeric={cell.column.isNumeric}
-                      >
-                        {cell.render("Cell")}
-                      </Td>
-                    ))}
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
+
       </Grid>
     </DashBoardLayout>
   );
