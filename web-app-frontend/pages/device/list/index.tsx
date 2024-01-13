@@ -1,10 +1,9 @@
 import { DEFAULT_STYLES } from "styles";
 import React, { useMemo } from "react";
 import { DashBoardLayout } from "layout";
-import { Header} from "components";
+import { Header } from "components";
 import { DeviceListTable } from "components/dashboard/shared/DeviceListTable";
-import { Grid } from "@chakra-ui/react";
-
+import { Grid, Card, CardHeader, CardBody, Heading, Stack, StackDivider } from "@chakra-ui/react";
 
 interface DeviceListProps {}
 
@@ -52,7 +51,7 @@ const DeviceList: React.FC<DeviceListProps> = () => {
   const topbar = (
     <Header fontSize={{ base: "1.1rem", md: "1.5rem" }}>Device List</Header>
   );
-  
+
   return (
     <DashBoardLayout header={topbar} showBckBtn>
       <Grid
@@ -68,7 +67,17 @@ const DeviceList: React.FC<DeviceListProps> = () => {
         px={DEFAULT_STYLES.mobilePx}
         w={DEFAULT_STYLES.fullWidth}
       >
+        <Card>
+          <CardHeader>
+            <Heading size="md">Device List</Heading>
+          </CardHeader>
 
+          <CardBody>
+            <Stack divider={<StackDivider />} spacing="4">
+              <DeviceListTable columns={columns} data={data}/>
+            </Stack>
+          </CardBody>
+        </Card>
       </Grid>
     </DashBoardLayout>
   );
