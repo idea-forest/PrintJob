@@ -1,5 +1,7 @@
-import React from "react";
-import { useTable, usePagination } from "react-table";
+import React, { Fragment, useCallback } from "react";
+import { useTable } from "@refinedev/react-table";
+import { ColumnDef, flexRender, Row } from "@tanstack/react-table";
+
 import {
   Table,
   Thead,
@@ -7,155 +9,211 @@ import {
   Tr,
   Th,
   Td,
-  Flex,
-  IconButton,
-  Text,
-  Tooltip,
+  TableContainer,
+  HStack,
   Select,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper
+  IconButton,
+  Textarea,
+  Box,
+  Badge,
 } from "@chakra-ui/react";
-import {
-  ArrowRightIcon,
-  ArrowLeftIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon
-} from "@chakra-ui/icons";
+import { List } from "@refinedev/chakra-ui";
+import { useForm } from "@refinedev/react-hook-form";
+import { IconChevronDown, IconChevronRight } from "@tabler/icons";
+import { ColumnFilter, ColumnSorter } from "components/table";
+import { Pagination } from "components/pagination";
+import { FilterElementProps } from "models/FilterElementProps";
+import { Device } from "models/device";
 
-export const DeviceListTable = ({ columns, data }) => {
+interface DeviceListTableProps {
+  dataRowList: any[];
+}
+
+export const DeviceListTable: React.FC<DeviceListTableProps> = ({
+  dataRowList,
+}) => {
   const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize }
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState: { pageIndex: 2 }
+    refineCore: { onFinish, id, setId },
+    handleSubmit,
+    register,
+  } = useForm<Device>({
+    refineCoreProps: {
+      redirect: false,
+      action: "edit",
     },
-    usePagination
+  });
+
+  const columns = React.useMemo<ColumnDef<Device>[]>(
+    () => [
+      {
+        id: "id",
+        header: "",
+        accessorKey: "id",
+        enableColumnFilter: false,
+      },
+      {
+        id: "deviceId",
+        header: "Device Id",
+        accessorKey: "deviceId",
+        meta: {
+          filterOperator: "contains",
+        },
+      },
+      {
+        id: "machineName",
+        header: "Machine Name",
+        accessorKey: "machineName",
+        enableColumnFilter: false,
+      },
+      {
+        id: "ipAddress",
+        header: "IP Address",
+        accessorKey: "ipAddress",
+        enableColumnFilter: false,
+      },
+      {
+        id: "os",
+        header: "OS",
+        accessorKey: "os",
+        enableColumnFilter: false,
+      },
+      {
+        id: "deviceStatus",
+        header: "Device Status",
+        accessorKey: "deviceStatus",
+        meta: {
+          filterElement: function render(props: FilterElementProps) {
+            return (
+              <Select
+                borderRadius="md"
+                size="sm"
+                placeholder="All Device Status"
+                {...props}
+              >
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+              </Select>
+            );
+          },
+          filterOperator: "eq",
+        },
+      },
+    ],
+    []
   );
+
+  const {
+    getHeaderGroups,
+    getRowModel,
+    refineCore: { setCurrent, pageCount, current, tableQueryResult },
+  } = useTable({
+    columns,
+    data: dataRowList,
+    refineCoreProps: {
+      initialSorter: [
+        {
+          field: "id",
+          order: "desc",
+        },
+      ],
+    },
+  });
+
+  const renderEditRow = useCallback((row: Row<Device>) => {
+    const { deviceId, machineName, ipAddress, os, deviceStatus } = row.original;
+
+    return (
+      <React.Fragment key={id}>
+        <Tr>
+          <Td>
+            <IconButton
+              aria-label="Collapse / Expand"
+              onClick={() => row.toggleExpanded()}
+            >
+              {row.getIsExpanded() ? <IconChevronDown /> : <IconChevronRight />}
+            </IconButton>
+          </Td>
+          <Td>{deviceId}</Td>
+          <Td>{machineName}</Td>
+          <Td>{ipAddress}</Td>
+          <Td>{os}</Td>
+          <Td>
+            {deviceStatus ? (
+              <>
+                <Badge colorScheme="green">Online</Badge>
+              </>
+            ) : (
+              <>
+                <Badge colorScheme="red">Offline</Badge>
+              </>
+            )}
+          </Td>
+        </Tr>
+      </React.Fragment>
+    );
+  });
 
   return (
-    <>
-      <Table {...getTableProps()}>
-        <Thead>
-          {headerGroups.map((headerGroup, index) => (
-            <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
-              {headerGroup.headers.map((column, i) => (
-                <Th {...column.getHeaderProps()} key={i}>{column.render("Header")}</Th>
+    <form onSubmit={handleSubmit(onFinish)}>
+      <List>
+        <TableContainer whiteSpace="pre-line">
+          <Table variant="simple">
+            <Thead>
+              {getHeaderGroups().map((headerGroup: any) => (
+                <Tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header: any) => (
+                    <Th key={header.id}>
+                      {!header.isPlaceholder && (
+                        <HStack spacing="2">
+                          <Box>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                          </Box>
+                          <HStack spacing="2">
+                            <ColumnSorter column={header.column} />
+                            <ColumnFilter column={header.column} />
+                          </HStack>
+                        </HStack>
+                      )}
+                    </Th>
+                  ))}
+                </Tr>
               ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <Tr {...row.getRowProps()} key={i}>
-                {row.cells.map((cell, index) => {
-                  return (
-                    <Td {...cell.getCellProps()} key={index}>{cell.render("Cell")}</Td>
-                  );
-                })}
-              </Tr>
-            );
-          })}
-        </Tbody>
-      </Table>
-
-      <Flex justifyContent="space-between" m={4} alignItems="center">
-        <Flex>
-          <Tooltip label="First Page">
-            <IconButton
-              onClick={() => gotoPage(0)}
-              isDisabled={!canPreviousPage}
-              icon={<ArrowLeftIcon h={3} w={3} />}
-              mr={4} aria-label={""}            />
-          </Tooltip>
-          <Tooltip label="Previous Page">
-            <IconButton
-              onClick={previousPage}
-              isDisabled={!canPreviousPage}
-              icon={<ChevronLeftIcon h={6} w={6} />} aria-label={""}            />
-          </Tooltip>
-        </Flex>
-
-        <Flex alignItems="center">
-          <Text flexShrink="0" mr={8}>
-            Page{" "}
-            <Text fontWeight="bold" as="span">
-              {pageIndex + 1}
-            </Text>{" "}
-            of{" "}
-            <Text fontWeight="bold" as="span">
-              {pageOptions.length}
-            </Text>
-          </Text>
-          <Text flexShrink="0">Go to page:</Text>{" "}
-          <NumberInput
-            ml={2}
-            mr={8}
-            w={28}
-            min={1}
-            max={pageOptions.length}
-            onChange={(value: any) => {
-              const page = value ? value - 1 : 0;
-              gotoPage(page);
-            }}
-            defaultValue={pageIndex + 1}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Select
-            w={32}
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-            }}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </Select>
-        </Flex>
-
-        <Flex>
-          <Tooltip label="Next Page">
-            <IconButton
-              onClick={nextPage}
-              isDisabled={!canNextPage}
-              icon={<ChevronRightIcon h={6} w={6} />} aria-label={""}            />
-          </Tooltip>
-          <Tooltip label="Last Page">
-            <IconButton
-              onClick={() => gotoPage(pageCount - 1)}
-              isDisabled={!canNextPage}
-              icon={<ArrowRightIcon h={3} w={3} />}
-              ml={4} aria-label={""}            />
-          </Tooltip>
-        </Flex>
-      </Flex>
-    </>
+            </Thead>
+            <Tbody>
+              {getRowModel().rows.map((row: any) => {
+                // if (id === (row.original as Device).id) {
+                //   return renderEditRow(row);
+                // } else
+                //   return (
+                //     <Fragment key={row.id}>
+                //       <Tr>
+                //         {row.getVisibleCells().map((cell: any) => {
+                //           return (
+                //             <Td key={cell.id}>
+                //               {flexRender(
+                //                 cell.column.columnDef.cell,
+                //                 cell.getContext()
+                //               )}
+                //             </Td>
+                //           );
+                //         })}
+                //       </Tr>
+                //     </Fragment>
+                //   );
+                return renderEditRow(row);
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+        <Pagination
+          current={current}
+          pageCount={pageCount}
+          setCurrent={setCurrent}
+        />
+      </List>
+    </form>
   );
-}
+};

@@ -12,8 +12,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const router = useRouter();
   const checkAuthentication = () => {
-    const user = localStorage.getItem('user');
-    setIsAuthenticated(!!user);
+    const user = JSON.parse(localStorage.getItem('user')as string);
+    if (user?.user) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
   };
 
   useEffect(() => {

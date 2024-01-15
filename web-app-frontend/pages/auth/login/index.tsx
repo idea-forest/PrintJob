@@ -93,6 +93,7 @@ export default function Login(): JSX.Element {
           Toast(response?.error, 'error');
           throw new Error(response?.error); 
         }
+        localStorage.setItem("user", JSON.stringify(response));
         updateUserInfo(response);
         setIsLoading(false);
         actions.setSubmitting(false);

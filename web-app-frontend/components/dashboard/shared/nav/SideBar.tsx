@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useCustomMediaQuery } from 'context';
 import { Flex } from '@chakra-ui/react';
+import { useUserStore } from "utils/fetch-utils";
 
 // TODO: Remove nextjs data collection
 
@@ -81,8 +82,8 @@ export const SideBar = () => {
           <NavItem
             icon={BiLogOut}
             title='Logout'
-            onClick={() => {
-              push(DashRoutes.home);
+            onClick={async() => {
+              push(DashRoutes.login);
             }}
           />
         </ColumnFlex>

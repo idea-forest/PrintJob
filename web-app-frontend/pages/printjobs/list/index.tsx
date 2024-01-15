@@ -2,12 +2,10 @@ import { DEFAULT_STYLES } from "styles";
 import React, { useEffect, useState } from "react";
 import { DashBoardLayout } from "layout";
 import { Header } from "components";
-import { DeviceListTable } from "components/dashboard/shared/DeviceListTable";
+import { PrintJobListTable } from "components/dashboard/shared/PrintJobListTable";
 import {
   Card,
-  CardHeader,
   CardBody,
-  Heading,
   Stack,
   StackDivider,
   Alert,
@@ -15,18 +13,20 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
-import { useDeviceStore } from "utils/api";
+import { usePrintJobStore } from "utils/api";
 import { RingSpinnerOverlay } from "react-spinner-overlay";
 import { ILoginAccess } from "models";
 
-interface DeviceListProps {}
+interface PrintJobListProps {}
 
-const DeviceList: React.FC<DeviceListProps> = () => {
-  const { data, loading, error, fetchData } = useDeviceStore();
+const PrintJobList: React.FC<PrintJobListProps> = () => {
+  const { data, loading, error, fetchData } = usePrintJobStore();
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
 
   useEffect(() => {
-    const userInfo: ILoginAccess = JSON.parse(localStorage.getItem("user") as string);
+    const userInfo: ILoginAccess = JSON.parse(
+      localStorage.getItem("user") as string
+    );
     fetchData(userInfo?.user?.teamId);
   }, []);
 
@@ -39,7 +39,7 @@ const DeviceList: React.FC<DeviceListProps> = () => {
   }, [error]);
 
   const topbar = (
-    <Header fontSize={{ base: "1.1rem", md: "1.5rem" }}>Device List</Header>
+    <Header fontSize={{ base: "1.1rem", md: "1.5rem" }}>Print Job List</Header>
   );
 
   return (
@@ -57,7 +57,15 @@ const DeviceList: React.FC<DeviceListProps> = () => {
               </Alert>
             ) : (
               <Stack divider={<StackDivider />} spacing="4">
-                <DeviceListTable dataRowList={data} />
+                {data ? (
+                  <PrintJobListTable dataRowList={data} />
+                ) : (
+                  <Alert status="error" mb="4">
+                    <AlertIcon />
+                    <AlertTitle mr={2}>Error!</AlertTitle>
+                    <AlertDescription>No record found</AlertDescription>
+                  </Alert>
+                )}
               </Stack>
             )}
           </CardBody>
@@ -67,4 +75,4 @@ const DeviceList: React.FC<DeviceListProps> = () => {
   );
 };
 
-export default DeviceList;
+export default PrintJobList;

@@ -76,11 +76,6 @@ export const useUserStore = create<UserService>((set) => ({
       }
 
       const user = await response.json();
-
-      if (user && user.token) {
-        localStorage.setItem("user", JSON.stringify(response));
-      }
-
       return user;
     } catch (error) {
       throw new Error('Login failed');
@@ -139,7 +134,7 @@ export const useUserStore = create<UserService>((set) => ({
     }
   },
 
-  logout: () => {
+  logout: async () => {
     localStorage.removeItem('user');
   },
 }));

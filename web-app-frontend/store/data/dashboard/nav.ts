@@ -1,36 +1,20 @@
 import { NavItemProps } from 'models';
 import { DashRoutes } from 'utils';
-import { TfiMenuAlt } from 'react-icons/tfi';
-// import { ImStack } from 'react-icons/im';
-// import { MdStackedLineChart } from 'react-icons/md';
-// import { FiCheckCircle } from 'react-icons/fi';
-// import { HiOutlineUsers } from 'react-icons/hi';
-// import { BsCreditCard, BsCashStack } from 'react-icons/bs';
+import { LuPrinter } from "react-icons/lu";
+import { TbDeviceIpadShare } from "react-icons/tb";
 import { nanoid } from 'nanoid';
 
 export const deviceItems: NavItemProps[] = [
   {
-    icon: TfiMenuAlt,
+    icon: TbDeviceIpadShare,
     title: 'Device Management',
     path: DashRoutes.deviceList,
     id: nanoid(),
   },
   {
-    icon: TfiMenuAlt,
-    title: 'Device Management',
-    path: DashRoutes.device,
-    id: nanoid(),
-  },
-  {
-    icon: TfiMenuAlt,
-    title: 'Device Management',
-    path: DashRoutes.device,
-    id: nanoid(),
-  },
-  {
-    icon: TfiMenuAlt,
-    title: 'Device Management',
-    path: DashRoutes.device,
+    icon: LuPrinter,
+    title: 'Print Jobs',
+    path: DashRoutes.printJobsList,
     id: nanoid(),
   },
 ];
