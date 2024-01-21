@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <Grid.Background>
-            <ImageBrush ImageSource="../Resources/Login.png" Stretch="UniformToFill" />
+            <SolidColorBrush Color="#4B0082" />
         </Grid.Background>
 
         <TextBlock

@@ -5,6 +5,9 @@ using PrintLoc.Properties;
 using System;
 using System.ComponentModel;
 using System.Windows;
+using PrintLoc.Model;
+using PrintLoc.View;
+using PrintLoc.Helper;
 
 namespace PrintLoc.ViewModel
 {
@@ -19,12 +22,19 @@ namespace PrintLoc.ViewModel
         public LaunchPageModel(Window window)
         {
             this.window = window;
+            LaunchAsync();
+        }
+        #endregion
 
-            if(deviceId == null)
+        #region Private Methods
+        private async void LaunchAsync()
+        {
+            if (deviceId == null)
             {
                 var loginViewModel = new LoginViewModel(window);
                 WindowManager.ChangeWindowContent(window, loginViewModel, Resources.LoginWindowTitle, Resources.LoginControlPath);
-            } else
+            }
+            else
             {
                 var homepageViewModel = new HomepageViewModel(window);
                 WindowManager.ChangeWindowContent(window, homepageViewModel, Resources.HomepageWindowTitle, Resources.HomepageControlPath);
@@ -32,9 +42,33 @@ namespace PrintLoc.ViewModel
                 {
                     homepageViewModel.CloseAction = () => window.Close();
                 }
+                //Device device = await AccountManager.StoreDevice();
+                //if (device != null)
+                //{
+                //    if (device.Passcode != null)
+                //    {
+                //        var homepageViewModel = new HomepageViewModel(window);
+                //        WindowManager.ChangeWindowContent(window, homepageViewModel, Resources.HomepageWindowTitle, Resources.HomepageControlPath);
+                //        if (homepageViewModel.CloseAction == null)
+                //        {
+                //            homepageViewModel.CloseAction = () => window.Close();
+                //        }
+                //    }
+                //    else
+                //    {
+                //        window.Close();
+                //        EnablePinCodeWindow enablePinCode = new EnablePinCodeWindow();
+                //        enablePinCode.ShowDialog();
+                //    }
+                //}
+                //else
+                //{
+                //    window.Close();
+                //    MessageBox.Show("Something went wrong");
+                //}
             }
         }
-    #endregion
+        #endregion
 
         #region INotifyPropertyChanged
 

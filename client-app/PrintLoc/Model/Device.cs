@@ -14,5 +14,7 @@ namespace PrintLoc.Model
         public string IpAddress { get; set; }
         public string Os { get; set; }
         public bool DeviceStatus { get; set; }
+        public string Passcode { get; set; }
+        public bool IsPasscode { get; set; }
     }
 }

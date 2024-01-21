@@ -32,7 +32,6 @@ namespace PrintLoc.Helper
         private async void CheckPrinters(object sender, ElapsedEventArgs e)
         {
             string deviceId = DeviceIdManager.GetDeviceId();
-
             if (!string.IsNullOrEmpty(deviceId))
             {
                 try

@@ -9,6 +9,7 @@ using System;
 using PrintLoc.Command;
 using System.IO;
 using System.Threading.Tasks;
+using PrintLoc.View;
 
 namespace PrintLoc.ViewModel
 {
@@ -65,26 +66,53 @@ namespace PrintLoc.ViewModel
         {
             UserModel.Instance.Email = Email;
             UserModel.Instance.TeamName = TeamName;
-            if (UserModel.Instance.Email == null || UserModel.Instance.Password == null || UserModel.Instance.TeamName == null)
+            if (UserModel.Instance.TeamName == null)
             {
-                MessageBox.Show("Both TeamName, email and password should be filled in.");
+                MessageBox.Show("Teamname is required");
+                return;
+            }
+
+            if (UserModel.Instance.Email == null)
+            {
+                MessageBox.Show("EMail address is required");
+                return;
+            }
+
+            if(UserModel.Instance.Password == null)
+            {
+                MessageBox.Show("Password is required");
                 return;
             }
 
             var loggedInUser = await AccountManager.LoginAccount(UserModel.Instance.TeamName, UserModel.Instance.Email, UserModel.Instance.Password);
-            if (loggedInUser != null)
+            if(loggedInUser.Success)
             {
-                var homepageViewModel = new HomepageViewModel(window);
-                WindowManager.ChangeWindowContent(window, homepageViewModel, Resources.HomepageWindowTitle, Resources.HomepageControlPath);
-                if (homepageViewModel.CloseAction == null)
+                if(loggedInUser.User.EmailConfirmed)
                 {
-                    homepageViewModel.CloseAction = () => window.Close();
+                    window.Close();
+                    OtpCodeWindow otpCodeWindow = new OtpCodeWindow();
+                    otpCodeWindow.ShowDialog();
+                } else
+                {
+                    MessageBox.Show("Please verify your account on the web to continue using prinbloc");
                 }
-            }
-            else
+            } else
             {
-               MessageBox.Show("Invalid credentials.");
+                MessageBox.Show(loggedInUser.Errors.ToString());
             }
+            //if (loggedInUser != null)
+            //{
+            //    var homepageViewModel = new HomepageViewModel(window);
+            //    WindowManager.ChangeWindowContent(window, homepageViewModel, Resources.HomepageWindowTitle, Resources.HomepageControlPath);
+            //    if (homepageViewModel.CloseAction == null)
+            //    {
+            //        homepageViewModel.CloseAction = () => window.Close();
+            //    }
+            //}
+            //else
+            //{
+            //   MessageBox.Show("Invalid credentials.");
+            //}
         }
 
         #endregion

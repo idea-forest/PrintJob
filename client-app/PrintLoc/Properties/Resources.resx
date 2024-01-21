@@ -183,4 +183,7 @@
   <data name="ReportsWindowTitle" xml:space="preserve">
     <value>Reports</value>
   </data>
+  <data name="FloatingActionWindows" xml:space="preserve">
+    <value>PrintLoc.View.FloatingActionWindows</value>
+  </data>
 </root>

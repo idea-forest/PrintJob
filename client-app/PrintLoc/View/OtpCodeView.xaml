@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="PrintLoc.View.OtpCodeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PrintLoc.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="280" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Background>
+            <SolidColorBrush Color="#4B0082" />
+        </Grid.Background>
+
+        <TextBlock Grid.Row="1" Text="Please Enter OTP" HorizontalAlignment="Center" Margin="0,20,0,0" Foreground="White" FontSize="24" />
+
+        <PasswordBox
+            Name="Code"
+            Grid.Row="2"
+            Width="350"
+            Height="40"
+            Margin="0,24,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            BorderBrush="White"
+            FontSize="18"
+            Foreground="White"
+            PasswordChanged="Password_PasswordChanged">
+
+            <materialDesign:HintAssist.Hint>
+                <TextBlock Foreground="White">Enter OTP Code</TextBlock>
+            </materialDesign:HintAssist.Hint>
+        </PasswordBox>
+
+        <TextBlock Grid.Row="3" HorizontalAlignment="Center" Margin="0,10,0,0" Foreground="White">
+            <Hyperlink Click="ResendOtpClick" x:Name="resendOtpLink">
+                <TextBlock Text="Resend OTP" />
+            </Hyperlink>
+        </TextBlock>
+
+        <Button
+            x:Name="ConfirmOtpCode"
+            Grid.Row="4"
+            Width="170"
+            Height="40"
+            Margin="0,24,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Content="Continue"
+            Command="{Binding ConfirmOtpCommand}"
+            FontSize="18" />
+    </Grid>
+</UserControl>

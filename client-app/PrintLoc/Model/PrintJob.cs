@@ -25,5 +25,7 @@ namespace PrintLoc.Model
         public string Message { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool LandScape { get; set; }
+        public string Passcode { get; set; }
+        public bool IsPasscode { get; set; }
     }
 }

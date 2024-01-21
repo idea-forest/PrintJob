@@ -15,5 +15,6 @@ namespace PrintLoc.Model
         public string RefreshToken { get; set; }
         public User User { get; set; }
         public bool Success { get; set; }
+        public string Errors { get; set; }
     }
 }

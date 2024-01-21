@@ -17,6 +17,7 @@ namespace PrintLoc.View
     public partial class HomepageControl : UserControl
     {
         private string deviceId = DeviceIdManager.GetDeviceId();
+        private string teamName = DeviceIdManager.GetDeviceTeamname();
 
         private Timer connectivityCheckTimer;
         private bool deviceIDPresent = false;
@@ -76,6 +77,20 @@ namespace PrintLoc.View
             });
         }
 
+        //private async Task SetPinCode()
+        //{
+        //    while (!deviceIDPresent)
+        //    {
+        //        await Task.Delay(TimeSpan.FromSeconds(3));
+
+        //        if (deviceId != null)
+        //        {
+        //            EnablePinCodeWindow enablePinCode = new EnablePinCodeWindow();
+        //            enablePinCode.ShowDialog();
+        //        }
+        //    }
+        //}
+
         private async Task UpdateQRCode()
         {
             int width = 200;
@@ -90,6 +105,8 @@ namespace PrintLoc.View
                     BitmapImage qrCodeBitmap = Qrcode.GenerateQRCode(deviceId, width, height);
                     DeviceIDText.Text = $"Device ID: {deviceId}";
                     QRCodeImage.Source = qrCodeBitmap;
+                    DeviceTeamName.Text = teamName;
+                    ConnectedDevice.Instance.DeviceId = deviceId;
                 }
             }
         }

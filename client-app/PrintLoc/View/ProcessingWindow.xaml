@@ -1,0 +1,31 @@
+﻿<Window x:Class="PrintLoc.View.ProcessingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PrintLoc.View"
+        mc:Ignorable="d"
+        Icon="../Resources/Icon.ico"
+        Title="Processing..." Height="200" Width="300" WindowStyle="None" AllowsTransparency="True">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#4D90E5"/>
+                <GradientStop Offset="1" Color="#3366CC"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Viewbox Grid.Row="0">
+            <ProgressBar Width="120" Height="20" IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+        </Viewbox>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10">
+            <TextBlock Text="Processing..." FontSize="18" Foreground="White"/>
+        </StackPanel>
+    </Grid>
+</Window>

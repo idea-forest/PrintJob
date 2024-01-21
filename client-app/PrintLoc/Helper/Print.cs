@@ -13,6 +13,7 @@ using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Word;
 using OfficeOpenXml;
 using PdfiumViewer;
+using PrintLoc.View;
 using Application = Microsoft.Office.Interop.Word.Application;
 using PageSetup = Microsoft.Office.Interop.Word.PageSetup;
 using Point = System.Drawing.Point;
@@ -67,6 +68,11 @@ namespace PrintLoc.Helper
                         }
                         catch (Exception ex)
                         {
+                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                PrintFailureWindow printFailureWindow = new PrintFailureWindow();
+                                printFailureWindow.ShowDialog();
+                            });
                             Console.WriteLine($"Error while identifying or printing the file: {ex.Message}");
                             printStatus = false;
                         }
@@ -77,6 +83,11 @@ namespace PrintLoc.Helper
                     }
                     else
                     {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            PrintFailureWindow printFailureWindow = new PrintFailureWindow();
+                            printFailureWindow.Show();
+                        });
                         Console.WriteLine("File does not exist at the specified path.");
                     }
 
@@ -144,6 +155,11 @@ namespace PrintLoc.Helper
                 String Status = "printed";
                 String Message = "Document printed succesfully";
                 await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    PrintSuccessWindow printSuccessWindow = new PrintSuccessWindow();
+                    printSuccessWindow.ShowDialog();
+                });
                 return true;
             }
             catch(Exception ex)
@@ -152,6 +168,11 @@ namespace PrintLoc.Helper
                 String Status = "failed";
                 String Message = $"Error printing your document: {ex.Message}";
                 await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    PrintFailureWindow printFailureWindow = new PrintFailureWindow();
+                    printFailureWindow.ShowDialog();
+                });
                 return false;
             }
         }
@@ -210,6 +231,14 @@ namespace PrintLoc.Helper
                 String Status = "printed";
                 String Message = "Document printed succesfully";
                 await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    //ProcessingWindow processingWindow = new ProcessingWindow();
+                    //processingWindow.Close();
+
+                    //PrintSuccessWindow printSuccessWindow = new PrintSuccessWindow();
+                    //printSuccessWindow.ShowDialog();
+                });
                 return true;
             }
             catch (Exception ex)
@@ -218,6 +247,11 @@ namespace PrintLoc.Helper
                 String Status = "failed";
                 String Message = $"Error printing your document: {ex.Message}";
                 await AccountManager.updatePrintJob(JobId, Status, Message, counter, fileExtension);
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    PrintFailureWindow printFailureWindow = new PrintFailureWindow();
+                    printFailureWindow.ShowDialog();
+                });
                 return false;
             }
         }

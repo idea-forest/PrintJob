@@ -88,6 +88,15 @@ namespace PrintLoc.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PrintLoc.View.FloatingActionWindows.
+        /// </summary>
+        internal static string FloatingActionWindows {
+            get {
+                return ResourceManager.GetString("FloatingActionWindows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PrintLoc.View.ForgotPasswordControl.
         /// </summary>
         internal static string ForgotPasswordControlPath {

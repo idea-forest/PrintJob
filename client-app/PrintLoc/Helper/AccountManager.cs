@@ -20,6 +20,10 @@ namespace PrintLoc.Helper
 
         private static string retrievedDeviceId = DeviceIdManager.GetDeviceId();
 
+        private static string retrieveTeamName = DeviceIdManager.GetDeviceTeamname();
+
+        private static string retrieveToken = DeviceIdManager.GetDeviceToken();
+
         private static readonly DeviceInformation deviceInformation = new DeviceInformation();
 
         public static async Task<PrintJobModel> updatePrintJob(int Id, string Status, string Message, int PageNo, string Type)
@@ -87,10 +91,11 @@ namespace PrintLoc.Helper
             }
         }
 
-        public static async Task<Device> StoreDevice(string token, string teamid)
+        public static async Task<Device> StoreDevice(string teamid = null)
         {
             try
             {
+                string token = AuthResult.Instance.Token;
                 var requestBody = new
                 {
                     DeviceId = deviceInformation.GetUniqueDeviceIdentifier(),
@@ -104,22 +109,87 @@ namespace PrintLoc.Helper
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 HttpResponseMessage response = await client.PostAsync(apiUrl + "api/Device/SyncDeviceByTeamName", content);
                 Console.WriteLine(response);
+                Device storedDevice = await response.Content.ReadAsAsync<Device>();
                 if (response.IsSuccessStatusCode)
                 {
-                    Device storedDevice = await response.Content.ReadAsAsync<Device>();
-                    if(retrievedDeviceId != null)
+                    if (retrievedDeviceId != null)
                     {
                         DeviceIdManager.DeleteFile();
                         DeviceIdManager.SaveDeviceId(storedDevice.DeviceId);
-                    } else
+                        ConnectedDevice.Instance.DeviceId = storedDevice.DeviceId;
+                    }
+                    else
                     {
                         DeviceIdManager.SaveDeviceId(storedDevice.DeviceId);
+                        ConnectedDevice.Instance.DeviceId = storedDevice.DeviceId;
+                    }
+
+                    if (retrieveToken != null)
+                    {
+                        DeviceIdManager.DeleteTokenFile();
+                        DeviceIdManager.SaveDeviceToken(token);
+                    }
+                    else
+                    {
+                        DeviceIdManager.SaveDeviceToken(token);
                     }
                     return storedDevice;
                 }
                 return null;
             } 
             catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<PasscodeResponse> EnablePinCode(string deviceId, string pinCode)
+        {
+            try
+            {
+                string Token = AuthResult.Instance.Token;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                HttpResponseMessage response = await client.GetAsync(apiUrl + "api/VerifyPasscode/EnablePinCode/" + deviceId + $"/{pinCode}");
+                Console.WriteLine(response);
+                PasscodeResponse pin = await response.Content.ReadAsAsync<PasscodeResponse>();
+                return pin;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<PasscodeResponse> ResendOtp()
+        {
+            try
+            {
+                string Token = AuthResult.Instance.Token;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                HttpResponseMessage response = await client.GetAsync(apiUrl + "api/VerifyPasscode/ResendOtpWindows");
+                PasscodeResponse resendOtp = await response.Content.ReadAsAsync<PasscodeResponse>();
+                return resendOtp;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<PasscodeResponse> VerifyOtp(string code)
+        {
+            try
+            {
+                string Token = AuthResult.Instance.Token;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                HttpResponseMessage response = await client.GetAsync(apiUrl + "api/VerifyPasscode/VerifyOtpWindows/" + code);
+                PasscodeResponse responsePasscode = await response.Content.ReadAsAsync<PasscodeResponse>();
+                return responsePasscode;
+            }
+            catch(Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
                 return null;
@@ -139,25 +209,31 @@ namespace PrintLoc.Helper
                 };
                 var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(apiUrl + "api/auth/loginByClientApp", content);
-                if (response.IsSuccessStatusCode)
+                AuthResult user = await response.Content.ReadAsAsync<AuthResult>();
+                AuthResult.Instance.Errors = user.Errors;
+                AuthResult.Instance.Success = user.Success;
+                if (user != null && !string.IsNullOrEmpty(user.Token))
                 {
-                    AuthResult user = await response.Content.ReadAsAsync<AuthResult>();
-                    if (user != null && !string.IsNullOrEmpty(user.Token))
-                    {
-                        AuthResult.Instance.Token = user.Token;
-                        AuthResult.Instance.RefreshToken = user.RefreshToken;
-                        AuthResult.Instance.User = user.User;
-                        AuthResult.Instance.Success = user.Success;
+                    AuthResult.Instance.Token = user.Token;
+                    AuthResult.Instance.RefreshToken = user.RefreshToken;
+                    AuthResult.Instance.User = user.User;
+                    //await StoreDevice(user.Token, user.User.TeamId);
 
-                        await StoreDevice(user.Token, user.User.TeamId);
-                        return user;
+                    if (retrieveTeamName != null)
+                    {
+                        DeviceIdManager.DeleteTeamNameFile();
+                        DeviceIdManager.SaveDeviceTeamName(user.User.UserName);
                     }
+                    else
+                    {
+                        DeviceIdManager.SaveDeviceTeamName(user.User.UserName);
+                    }
+                    return user;
                 }
-                return null;
+                return user;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
                 Console.WriteLine("Error: " + ex.Message);
                 return null;
             }
