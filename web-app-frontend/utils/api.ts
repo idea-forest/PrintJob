@@ -3,6 +3,8 @@ import { ApiRoutes } from './api-route';
 import { DeviceStore } from 'models/DeviceStore';
 import { PrintJobStore } from 'models/PrintJobStore';
 import { DashbaordStore } from 'models/DashboardStore';
+import { PrinterStore } from 'models/PrinterStore';
+import { SubmitPrintStore } from 'models';
 import { ILoginAccess } from 'models';
 
 export const useDeviceStore = create<DeviceStore>((set) => ({
@@ -41,7 +43,6 @@ export const usePrintJobStore = create<PrintJobStore>((set) => ({
     },
 }));
 
-
 export const useDashbaordStore = create<DashbaordStore>((set) => ({
     data: [],
     loading: false,
@@ -58,4 +59,61 @@ export const useDashbaordStore = create<DashbaordStore>((set) => ({
             set({ loading: false, error });
         }
     },
+}));
+
+export const usePrinterStore = create<PrinterStore>((set) => ({
+    printer: [],
+    printerloading: false,
+    printererror: null,
+    fetchPrinterData: async (deviceId?: string) => {
+        try {
+            set({ printerloading: true, printererror: null });
+            const response = await fetch(`${ApiRoutes.apiUrl}/api/Printer/GetPrinterByDevice/${deviceId}`);
+            const data = await response.json();
+            set({ printer: data, printerloading: false });
+        } catch (error: any) {
+            set({ printerloading: false, printererror: error });
+        }
+    },
+}));
+
+export const usePostPrintJob = create<SubmitPrintStore>((set) => ({
+    printstore: [],
+    printstoreloading: false,
+    printstoreerror: null,
+    postPrintJob: async (printJobData) => {
+        try {
+            const user: ILoginAccess = JSON.parse(localStorage.getItem("user") as string);
+            set({ printstoreloading: true, printstoreerror: null });
+            let printJobBody = {
+                Copies: "1",
+                UserId: `${user.user?.id}`,
+                EndPage: "0",
+                PaperName: printJobData.paperName,
+                DeviceId: printJobData.selectedDeviceIndex,
+                StartPage: "1",
+                PrinterName: printJobData.selectedPrinterName,
+                FilePath: `https://api.printbloc.com/downloadfile/${printJobData.file}`,
+            };
+            const response = await fetch(`${ApiRoutes.apiUrl}/api/PrintJob/CreatePrintJob`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(printJobBody),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to post print job. Status: ${response.status}`);
+            }
+
+            const responseData = await response.json(); // Await the response.json() method
+            set({ printstoreloading: false, printstore: responseData });
+        } catch (error: any) {
+            set({ printstoreloading: false, printstoreerror: error });
+        }
+    },
+    resetPrintstore: async () => {
+        set({ printstore: [], printstoreloading: false, printstoreerror: null })
+    }
 }));

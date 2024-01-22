@@ -4,3 +4,5 @@ export * from './return';
 export * from './user';
 export * from './UserService';
 export * from './react-table-config.d';
+export * from './CreatePrintJob';
+export * from './SubmitPrint';

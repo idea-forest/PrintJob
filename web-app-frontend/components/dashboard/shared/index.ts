@@ -18,3 +18,5 @@ export * from './GrayInfoCard';
 export * from './ExchangeCard';
 export * from './DeviceListTable';
 export * from './PrintJobListTable';
+export * from './PrinterRadioCard';
+export * from './PaperType';

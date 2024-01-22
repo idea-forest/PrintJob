@@ -22,6 +22,7 @@ import {
 import {
   List,
   EditButton,
+  CreateButton,
   DeleteButton,
   DateField,
   SaveButton,
@@ -37,6 +38,8 @@ import { PrintJob } from "models/printjob";
 import { BiSolidFilePng } from "react-icons/bi";
 import { AiOutlineFileJpg } from "react-icons/ai";
 import { TbFileTypeXls } from "react-icons/tb";
+import { useRouter } from 'next/router'
+import { DashRoutes } from "utils";
 
 interface PrintJobListTableProps {
   dataRowList: any[];
@@ -55,6 +58,8 @@ export const PrintJobListTable: React.FC<PrintJobListTableProps> = ({
       action: "edit",
     },
   });
+  
+  const router = useRouter()
 
   const rswitch = (param: any, cases: any) => {
     if (cases[param]) {
@@ -236,6 +241,7 @@ export const PrintJobListTable: React.FC<PrintJobListTableProps> = ({
             {rswitch(status, {
               pending: <Badge colorScheme="black">Pending</Badge>,
               failed: <Badge colorScheme="red">Failed</Badge>,
+              processing: <Badge colorScheme="blue">Processing</Badge>,
               default: <Badge colorScheme="green">Printed</Badge>,
             })}
           </Td>
@@ -276,7 +282,9 @@ export const PrintJobListTable: React.FC<PrintJobListTableProps> = ({
 
   return (
     <form onSubmit={handleSubmit(onFinish)}>
-      <List>
+      <List 
+        headerButtons={<CreateButton onClick={() => router.push(DashRoutes.createPrintJob)}/>}
+      >
         <TableContainer whiteSpace="pre-line">
           <Table variant="simple">
             <Thead>

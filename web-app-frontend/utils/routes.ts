@@ -9,4 +9,5 @@ export class DashRoutes {
   static settings = `${this.dashboard}/settings`;
   static deviceList = `${this.device}/list`;
   static printJobsList = `${this.printJobs}/list`;
+  static createPrintJob = `${this.printJobs}/create`;
 }
