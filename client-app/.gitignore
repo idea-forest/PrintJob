@@ -7,6 +7,8 @@
 *.userosscache
 *.sln.docstates
 
+packages/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
